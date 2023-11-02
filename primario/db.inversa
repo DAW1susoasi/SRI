@@ -1,0 +1,19 @@
+$TTL    1d ; default expiration time (in seconds) of all RRs without their own TTL value
+@       IN      SOA     dns.jesus.com. admin.jesus.com. (
+                  2023100501	; Serial
+                  1d		; Refresh
+                  1h		; Retry
+                  1w     	; Expire
+                  1h )   	; Negative Cache TTL
+
+; name servers - NS records
+@     	IN      NS      dns.jesus.com.
+
+; name servers - A records
+2	IN      PTR	dns.jesus.com.
+4	IN      PTR	dhcp.jesus.com.
+11	IN      PTR	vpc01.jesus.com.
+12	IN      PTR	vpc02.jesus.com.
+201	IN      PTR	vpc-admin.jesus.com.
+
+

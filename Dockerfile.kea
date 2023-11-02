@@ -1,0 +1,50 @@
+#docker create --name ckea --network reddns --ip 192.168.10.2 --volume ~/kea/config:/etc/kea --volume ~/kea/data:/var/lib/kea docker.cloudsmith.io/isc/docker/kea-dhcp4
+#docker start ckea
+
+#FROM docker.cloudsmith.io/isc/docker/kea-dhcp4:latest
+FROM ubuntu:22.04
+
+# Actualizamos e instalamos kea
+RUN apt update && apt install -y kea-dhcp4-server 
+
+#Vamos a hacer la imagen más ligera
+RUN apt purge --auto-remove && apt clean && rm -rf /var/lib/apt/lists/*
+
+# Expongo puertos para luego poder publicarlos al iniciar el contenedor
+EXPOSE 67/tcp 67/udp
+EXPOSE 8080/tcp 8001/tcp
+
+# El directorio zones no está creado via ubuntu
+RUN mkdir -p /var/run/kea
+
+# Copiamos los archivos de configuración a la imagen
+ADD kea/kea-dhcp4.conf /etc/kea/kea-dhcp4.conf
+
+# Inicio el servicio
+CMD [ "kea-dhcp4","-c","/etc/kea/kea-dhcp4.conf" ]
+
+#docker network create --subnet=192.168.10.0/24 reddns
+#docker build -t ikea . -f Dockerfile.kea
+#docker build -t iubuntubind9p . -f Dockerfile.bind9p ** creo la imagen iubuntubind9 (ha de ser minúsculas) a partir del Dockerfile.bind9
+#docker build -t iubuntubind9s . -f Dockerfile.bind9s
+#docker build -t iubuntubind9valencia . -f Dockerfile.bind9valencia  NO FUNCIONA
+#docker build -t iubuntubind9caceres . -f Dockerfile.bind9caceres    NO FUNCIONA
+#docker run -d --name ckea --network reddns --ip 192.168.10.2 ikea
+#docker run -d --name cubuntubind9p --rm --network reddns --ip 192.168.10.2 iubuntubind9p ** con la opción --rm se elimina el contenedor al pararse
+#docker run -d --name cubuntubind9s --rm --network reddns --ip 192.168.10.3 iubuntubind9s
+#docker run -d --name cubuntubind9valencia --rm --network reddns --ip 192.168.10.4 iubuntubind9valencia   NO FUNCIONA
+#docker run -d --name cubuntubind9caceres --rm --network reddns --ip 192.168.10.5 iubuntubind9caceres     NO FUNCIONA
+#docker run -it --name calpineprofe --network reddns ialpineprofe
+
+#docker cp cubuntubind9p:/etc/bind primario ** copio la carpeta /etc/bind del contenedor cubuntubind9p a la carpeta primario del anfitrión
+
+#docker start cubuntubind9p
+#docker start calpineprofe
+#docker inspect cubuntubind9p | grep IPAddress para saber la dirección ip del contenedor
+#docker exec -it cubuntubind9p bash
+#named-checkconf
+#named-checkzone jesus.com /etc/bind/zones/db.jesus.com
+#named-checkzone 45.23.56.in-addr.arpa /etc/bind/zones/db.jesus.com.inversa
+#docker exec calpineprofe dig @192.168.100.2 www.jesus.com
+#docker exec calpineprofe dig -x @192.168.100.2 192.168.100.3
+
