@@ -1,0 +1,22 @@
+#Imagen base ubuntu 22.04
+FROM ubuntu:22.04
+
+# Actualizamos e instalamos kea
+RUN apt update && apt install -y kea-dhcp4-server 
+
+#Vamos a hacer la imagen más ligera
+RUN apt purge --auto-remove && apt clean && rm -rf /var/lib/apt/lists/*
+
+# Expongo puertos para luego poder publicarlos al iniciar el contenedor
+EXPOSE 67/tcp 67/udp
+EXPOSE 8080/tcp 8001/tcp
+
+# El directorio zones no está creado via ubuntu
+RUN mkdir -p /var/run/kea
+
+# Copiamos los archivos de configuración a la imagen
+ADD keasecundario/kea-dhcp4.conf /etc/kea/
+ADD keasecundario/kea-ctrl-agent.conf /etc/kea/
+
+# Inicio el servicio
+CMD [ "kea-dhcp4","-c","/etc/kea/kea-dhcp4.conf" ]
