@@ -1,0 +1,20 @@
+# Usa la imagen base de Ubuntu 22.04
+FROM ubuntu:22.04
+
+# Actualiza los repositorios e instala DNSMasq
+RUN apt update && apt install -y dnsmasq
+
+#Vamos a hacer la imagen más ligera
+RUN apt purge --auto-remove && apt clean && rm -rf /var/lib/apt/lists/*
+
+# Expongo puertos para luego poder publicarlos, si quiero, al iniciar el contenedor
+EXPOSE 53/tcp 53/udp
+
+# Copio el archivo de configuración de DNSMasq a la imagen
+COPY dnsmasq/dnsmasq.conf /etc/dnsmasq.conf
+
+# Define el comando que se ejecutará al iniciar el contenedor
+CMD ["dnsmasq", "-d"]
+
+# docker build -t suso2asi/idnsmasq . -f Dockerfile.dnsmasq --add-host=servidor:192.168.34.2
+
