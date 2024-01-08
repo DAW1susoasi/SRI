@@ -1,0 +1,44 @@
+# VPC para GNS3
+
+# Utilizar la última versión de Ubuntu 22.04
+FROM ubuntu:22.04
+
+# Actualizar e instalar las aplicaciones y el servidor SSH
+RUN apt update && apt install \
+    -y sudo \
+     nano \
+    -y iptables \
+    -y iputils-ping \
+    -y iproute2 \
+    -y bash \
+    -y bash-completion \
+    -y coreutils \
+    -y curl \
+    -y dnsutils \
+    -y htop \
+    -y iperf \
+    -y nmap \
+    -y netcat-openbsd \
+    -y moreutils \
+    -y openssh-server
+
+RUN DEBIAN_FRONTEND='noninteractive' apt install -y iptables-persistent
+
+#Vamos a hacer la imagen más ligera
+RUN apt purge --auto-remove && apt clean && rm -rf /var/lib/apt/lists/*
+
+# Crear un directorio para el servidor SSH
+RUN mkdir /var/run/sshd
+
+# Agregar un usuario para conectarse al servidor SSH
+RUN useradd -rm -d /home/papi -s /bin/bash -g root -G sudo -u 1000 papi && \
+    echo 'papi:5291' | chpasswd
+
+# Permitir la autenticación de contraseña para SSH (solo para fines de demostración, en producción se recomienda autenticación de clave)
+RUN sed -i 's/#PasswordAuthentication yes/PasswordAuthentication yes/' /etc/ssh/sshd_config
+
+# Exponer el puerto 22 para SSH
+EXPOSE 22
+
+# Establecer el comando por defecto para /bin/bash
+CMD ["/usr/sbin/sshd", "-D"]
