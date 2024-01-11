@@ -1,4 +1,4 @@
-#Servicio de Hosting
+# Servicio de Hosting
 ***
 Vamos a instalar un servidor ftps explícito en modo pasivo, enjaulando a los usuarios locales en ~/public_html y forzando el uso del protocolo FTPS  
 - ¿Por qué modo pasivo y no activo? En el modo activo el cliente solicita el servidor, enviando un comando PORT, a través de un puerto aleatorio superior al 1023 (por ejemplo el 1500) por el canal de control, con un paquete dirigido al puerto 21 del servidor, a fin de por ejemplo transferir un archivo.  

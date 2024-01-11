@@ -1,4 +1,4 @@
-#WebDAV
+# WebDAV
 ***
 Vamos a habilitar que el contenido del directorio /var/www/marchante/utiles/docs/recursos (si no existen habrá que crearlos con un comando que se llama ...... mkdir) de nuestro sitio web sea accesible, legible y editable; para ello necesitaremos no sólo un servidor web (Apache en nuestro caso), sino también un servidor WebDAV.  
 Dicho recurso sólo será accesible por ciertos usuarios mediante autentificación Digest.  
