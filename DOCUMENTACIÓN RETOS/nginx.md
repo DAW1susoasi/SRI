@@ -15,7 +15,6 @@ Pasos a seguir:
     services:
       duckdns:
         image: lscr.io/linuxserver/duckdns:latest
-        container_name: duckdns
         restart: always
         network_mode: host
         environment:
@@ -30,7 +29,6 @@ Pasos a seguir:
           - /home/ubuntu/duckdns/config:/config
       nginx-proxy:
         image: jwilder/nginx-proxy
-        container_name: proxy-nginx
         restart: always
         ports:
           - "80:80"
@@ -45,7 +43,6 @@ Pasos a seguir:
           - com.github.jrcs.letsencrypt_nginx_proxy_companion.nginx_proxy
       letsencrypt:
         image: jrcs/letsencrypt-nginx-proxy-companion
-        container_name: letsencriptado
         restart: always
         environment:
           - NGINX_PROXY_CONTAINER=nginx-proxy
@@ -57,7 +54,6 @@ Pasos a seguir:
           - acme:/etc/acme.sh
       www:
         image: nginx
-        container_name: nginx
         restart: always
         expose:
           - "80"
